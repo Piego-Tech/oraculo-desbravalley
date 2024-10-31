@@ -52,7 +52,6 @@ const Home = () => {
       const answer = await callApi(text);
       if (answer && answer.answer) {
         setReturnText(`${answer.answer}\n`);
-        speakOracle(answer.answer);
       }
       setTimeout(() => {
         setIsLoading(false);
