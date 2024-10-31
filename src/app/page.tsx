@@ -8,7 +8,7 @@ import Image from 'next/image';
 //
 const Home = () => {
     const [text, setText] = useState('');
-    const [returnText, setReturnText] = useState('O rato roeu a roupa do rei de roma');
+    const [returnText, setReturnText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [voices, setVoices] = useState([]);
   

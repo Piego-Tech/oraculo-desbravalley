@@ -20,8 +20,6 @@ export const generateAnswer = async (question: string) => {
         Authorization: `Bearer ${apiKey}`, // Use variáveis de ambiente
       },
     });
-    console.log("🚀 ~ generateAnswer ~ apiKey:", apiKey)
-    console.log("🚀 ~ generateAnswer ~ url:", url)
     //console.log("response: ", response.data.choices[0].message.content);
     return response.data.choices[0].message.content;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
