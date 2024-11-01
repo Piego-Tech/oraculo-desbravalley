@@ -7,6 +7,16 @@
   height: 100vh; /* Full height for the container */
 }
 
+.containerButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  margin-top: 10px;
+  width: 100%;
+}
+
 .logoOpenai, .logoPiego {
   width: 100%; /* Adjust based on the screen size */
   max-width: 250px; /* Maintain aspect ratio */
@@ -19,7 +29,7 @@
   border: 1px solid gray;
   border-radius: 10px;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-top: 20px;
   background-color: #F5F5F5;
   color: black;
 }
@@ -27,10 +37,23 @@
 .button {
   background-color: #995CF5;
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   width: 40%;
-  height: 5%;
+  height: 100%;
+  align-items: center;
+  font-size: medium;
+  color: #F5F5F5;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonMicrophone {
+  border-radius: 20px;
+  padding: 10px 10px;
+  width: 8%;
+  height: 100%;
   text-align: center;
+  align-items: center;
   font-size: medium;
   color: #F5F5F5;
   border: none;
@@ -69,3 +92,23 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.blinking {
+  animation: blink-gradient 2s infinite; /* Duração de 2 segundos */
+}
+
+@keyframes blink-gradient {
+  0% {
+    background: linear-gradient(45deg, #F5F5F5, #995CF5); /* Gradiente inicial */
+  }
+  33% {
+    background: linear-gradient(45deg, #995CF5, #F5F5F5); /* Gradiente reverso */
+  }
+  66% {
+    background: linear-gradient(45deg, #F5F5F5, #995CF5); /* Gradiente inicial novamente */
+  }
+  100% {
+    background: linear-gradient(45deg, #995CF5, #F5F5F5); /* Gradiente reverso novamente */
+  }
+}
+

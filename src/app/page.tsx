@@ -4,13 +4,48 @@ import React, { useEffect, useState } from 'react';
 import './App.css'; // Import a CSS file for styling
 import Image from 'next/image';
 
-//<Image src={'./src/openai.png'} width={90} height={100} alt="OpenAI Logo" className="logoOpenai" />
-//
 const Home = () => {
     const [text, setText] = useState('');
     const [returnText, setReturnText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [voices, setVoices] = useState([]);
+    const [isRecording, setIsRecording] = useState(false);
+
+    const startRecognition = async () => {
+      // Verifica se a API é suportada
+      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.error('Reconhecimento de fala não suportado pelo navegador.');
+        return;
+      }
+    
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'pt-BR'; // Define o idioma desejado
+    
+      recognition.onstart = () => {
+        setIsRecording(true); // Muda o estado para não gravando
+        console.log('Reconhecimento de fala iniciado.');
+      };
+    
+      recognition.onresult = async (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0][0].transcript;
+        setText(transcript);
+        await handleSend();
+        // Aqui você pode fazer algo com a transcrição
+      };
+    
+      recognition.onerror = (event: SpeechRecognitionError) => {
+        console.error('Erro de reconhecimento: ', event.error);
+      };
+    
+      recognition.onend = () => {
+        setIsRecording(false); // Muda o estado para não gravando
+        console.log('Reconhecimento de fala finalizado.');
+      };
+    
+      recognition.start(); // Inicia o reconhecimento
+    };
+    
   
     useEffect(() => {
       const getVoices = () => {
@@ -102,9 +137,18 @@ const Home = () => {
           onChange={(e) => setText(e.target.value)}
           placeholder="Faça sua pergunta"
         />
-        <button className="button" onClick={handleSend}>
-          {isLoading ? <div className="loader" /> : <span className="buttonText">Enviar</span>}
-        </button>
+        <div className='containerButtons'>
+          <button className={`buttonMicrophone ${isRecording ? 'blinking' : ''}`} // Adiciona a classe blinking se estiver gravando
+            onClick={startRecognition}
+            style={{
+              backgroundColor: isRecording ? '#F5F5F5' : '#995CF5'
+            }}>
+            <img src="/microphone_icon.svg" className='microphoneIcon' alt="Reconhecimento de fala" style={{ width: '30px', height: '20px' }} />
+          </button>
+          <button className="button" onClick={handleSend}>
+            {isLoading ? <div className="loader" /> : <span className="buttonText">Enviar</span>}
+          </button>
+        </div>
       </div>
     );
 };
