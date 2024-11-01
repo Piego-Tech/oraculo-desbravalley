@@ -11,8 +11,7 @@ const Home = () => {
     const [voices, setVoices] = useState([]);
     const [isRecording, setIsRecording] = useState(false);
 
-    const startRecognition = async () => {
-      // Verifica se a API é suportada
+    const startRecognition = () => {
       const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         console.error('Reconhecimento de fala não suportado pelo navegador.');
@@ -20,18 +19,18 @@ const Home = () => {
       }
     
       const recognition = new SpeechRecognition();
-      recognition.lang = 'pt-BR'; // Define o idioma desejado
+      recognition.lang = 'pt-BR';
     
       recognition.onstart = () => {
-        setIsRecording(true); // Muda o estado para não gravando
+        setIsRecording(true);
         console.log('Reconhecimento de fala iniciado.');
       };
     
       recognition.onresult = async (event: SpeechRecognitionEvent) => {
         const transcript = event.results[0][0].transcript;
         setText(transcript);
-        await handleSend();
-        // Aqui você pode fazer algo com a transcrição
+        // Chame diretamente a função de envio com o texto transcrito
+        handleSendByMicrophone(transcript); 
       };
     
       recognition.onerror = (event: SpeechRecognitionError) => {
@@ -39,13 +38,13 @@ const Home = () => {
       };
     
       recognition.onend = () => {
-        setIsRecording(false); // Muda o estado para não gravando
+        setIsRecording(false);
         console.log('Reconhecimento de fala finalizado.');
       };
     
-      recognition.start(); // Inicia o reconhecimento
+      recognition.start();
     };
-    
+        
   
     useEffect(() => {
       const getVoices = () => {
@@ -82,9 +81,20 @@ const Home = () => {
       }
     }, [returnText]);
 
-    const handleSend = async () => {
+    const handleSend = async (inputText = text) => {
       setIsLoading(true);
-      const answer = await callApi(text);
+      const answer = await callApi(inputText);
+      if (answer && answer.answer) {
+        setReturnText(`${answer.answer}\n`);
+      }
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    };
+    
+    const handleSendByMicrophone = async (textFromMicrophone:string) => {
+      setIsLoading(true);
+      const answer = await callApi(textFromMicrophone);
       if (answer && answer.answer) {
         setReturnText(`${answer.answer}\n`);
       }
@@ -117,16 +127,16 @@ const Home = () => {
           src="/giphy.webp" 
           alt="Gif"
           unoptimized
-          width={300}
-          height={300}
+          width={500}
+          height={500}
         />
         <span className="plusText">{''}</span>
         <Image
           src="/piegoBranca.png" 
           alt="Piego Logo"
           layout="intrinsic" // Usa o layout intrínseco
-          width={200}
-          height={200}
+          width={250}
+          height={250}
         />
         <div className="resultScroll">
           <p className="resultText">{returnText}</p>
@@ -134,8 +144,13 @@ const Home = () => {
         <input
           className="input"
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {setText(e.target.value), setReturnText('')}}
           placeholder="Faça sua pergunta"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSend();
+            }
+          }}
         />
         <div className='containerButtons'>
           <button className={`buttonMicrophone ${isRecording ? 'blinking' : ''}`} // Adiciona a classe blinking se estiver gravando

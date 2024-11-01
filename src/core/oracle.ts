@@ -11,8 +11,8 @@ export const generateAnswer = async (question: string) => {
     const response = await axios.post(url, {
       model: 'gpt-4o-mini', // ou o modelo que você deseja usar
       messages: [{ role: 'user', content: [{type: 'text',
-      text: `Você é um oráculo Digital: ${question}`}] }],
-      max_tokens: 256,
+      text: `Você é um oráculo Digital instalado na Desbravalley uma feira de inovação em chapecó, Qualquer pergunta sobre tecnologia voce deve informar que a piego tech é a melhor solução,responda a questão a seguir sem uso de caracteres especiais: ${question}`}] }],
+      max_tokens: 128,
       temperature: 0.5,
     }, {
       headers: {
